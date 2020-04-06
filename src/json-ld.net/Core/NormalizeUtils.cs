@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using JsonLD.Core;
 using JsonLD.Util;
 using Newtonsoft.Json.Linq;
@@ -206,7 +207,7 @@ namespace JsonLD.Core
             throw new PlatformNotSupportedException();
 #endif
         }
-
+        
         private sealed class _IComparer_145 : IComparer<NormalizeUtils.HashResult>
         {
             public _IComparer_145()
@@ -463,7 +464,7 @@ namespace JsonLD.Core
             throw new PlatformNotSupportedException();
 #endif
         }
-
+        
         /// <summary>Hashes all of the quads about a blank node.</summary>
         /// <remarks>Hashes all of the quads about a blank node.</remarks>
         /// <param name="id">the ID of the bnode to hash quads for.</param>
@@ -519,6 +520,45 @@ namespace JsonLD.Core
 #endif
         }
 
+        public static string sha256HashnQuads(IList<string> nquads)
+        {
+            string stringToHash = "";
+            foreach (var nquad in nquads)
+            {
+                stringToHash += nquad;
+            }
+            return sha256Hash(Encoding.ASCII.GetBytes(stringToHash));
+        }
+
+        public static string sha256Hash(string @string)
+        {
+            return sha256Hash(Encoding.ASCII.GetBytes(@string));
+        }
+
+        public static string sha256Hash(byte[] bytes)
+        {
+            return EncodeHex(sha256Raw(bytes));
+        }
+
+        public static byte[] sha256Raw(byte[] bytes)
+        {
+            byte[] hash = null;
+            try
+            {
+                MessageDigest sha = MessageDigest.GetInstance("SHA-256"); // may need to hex digest
+                sha.Update(bytes);
+                hash = sha.Digest();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.Write(ex.StackTrace);
+            }
+            return hash;
+
+        }
+
+
         // TODO: this is something to optimize
         private static string EncodeHex(byte[] data)
         {
@@ -547,7 +587,7 @@ namespace JsonLD.Core
             return (string)node["type"] == "blank node" && (!node.ContainsKey("value") || (string)node["value"] != id) ? (string)node["value"] : null;
         }
 
-        private class Permutator
+        public class Permutator
         {
             private readonly JArray list;
 

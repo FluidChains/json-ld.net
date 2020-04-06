@@ -498,6 +498,11 @@ namespace JsonLD.Core
 #endif
         }
 
+        public static object Normalize(object dataset, JsonLdOptions options)
+        {
+            return new JsonLdApi(options).Normalize((RDFDataset)dataset);
+        }
+
         /// <exception cref="JsonLD.Core.JsonLdError"></exception>
         public static object Normalize(JToken input)
         {

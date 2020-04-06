@@ -2177,6 +2177,20 @@ namespace JsonLD.Core
             return dataset;
         }
 
+        public virtual object Normalize(RDFDataset dataset, JsonLdOptions options)
+        {
+            if (options.getAlgorithm().Equals(JsonLdOptions.URGNA2012))
+            {
+                return Normalize(dataset);
+            }
+            else if (options.getAlgorithm().Equals(JsonLdOptions.URDNA2015))
+            {
+                return normalizeURDNA2015(dataset, options);
+            }
+            return null;
+        }       
+            
+        
 
         /// <summary>Performs RDF normalization on the given JSON-LD input.</summary>
         /// <remarks>Performs RDF normalization on the given JSON-LD input.</remarks>
@@ -2241,6 +2255,12 @@ namespace JsonLD.Core
 #else
             throw new PlatformNotSupportedException();
 #endif
+        }
+
+        public object normalizeURDNA2015(RDFDataset dataset, JsonLdOptions options)
+        {
+
+            return new Urdna2015((Dictionary<string, object>)dataset, options).Normalize();
         }
     }
 }

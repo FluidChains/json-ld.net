@@ -24,6 +24,19 @@ namespace JsonLD.Core
         //[System.Serializable]
         public class Quad : Dictionary<string,object>, IComparable<RDFDataset.Quad>
         {
+
+            public Quad(IDictionary<string, IDictionary<string, string>> component, string graph) : this
+                (component["subject"], component["predicate"], component["object"], graph)
+            {
+            }
+
+            public Quad(IDictionary<string, string> subject, IDictionary<string, string> predicate, IDictionary<string, string> @object, string graph) : this
+                (subject["type"].Equals("blank node") ? (Node)new RDFDataset.BlankNode(subject) : (Node)new RDFDataset.IRI(subject), (Node)new RDFDataset.IRI(predicate),
+                @object["type"].Equals("blank node") ? (Node)new BlankNode(@object) : new IRI(@object), graph)
+            {
+            }
+
+
             public Quad(string subject, string predicate, string @object, string graph) : this
                 (subject, predicate, @object.StartsWith("_:") ? (Node)new RDFDataset.BlankNode(@object
                 ) : (Node)new RDFDataset.IRI(@object), graph)
@@ -351,6 +364,14 @@ namespace JsonLD.Core
         //[System.Serializable]
         public class IRI : RDFDataset.Node
         {
+            public IRI(IDictionary<string, string> map)
+            {
+                this.Clear();
+                foreach (var m in map)
+                {
+                    this.Add(m.Key, m.Value);
+                }
+            }
             public IRI(string iri) : base()
             {
                 this["type"] = "IRI";
@@ -376,6 +397,15 @@ namespace JsonLD.Core
         //[System.Serializable]
         public class BlankNode : RDFDataset.Node
         {
+            public BlankNode(IDictionary<string, string> map)
+            {
+                this.Clear();
+                foreach (var m in map)
+                {
+                    this.Add(m.Key,m.Value);
+                }
+            }
+
             public BlankNode(string attribute) : base()
             {
                 this["type"] = "blank node";

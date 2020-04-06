@@ -27,6 +27,13 @@ namespace JsonLD.Core
 
         private bool compactArrays = true;
 
+        public static string URGNA2012 = "URGNA2012";
+
+        public static string URDNA2015 = "URDNA2015";
+
+        public string algorithm = "URDNA2015";
+
+
         private JObject expandContext = null;
 
         private string processingMode = "json-ld-1.0";
@@ -145,6 +152,16 @@ namespace JsonLD.Core
         public virtual void SetProduceGeneralizedRdf(bool produceGeneralizedRdf)
         {
             this.produceGeneralizedRdf = produceGeneralizedRdf;
+        }
+
+        public void setAlgorithm(string algorithm)
+        {
+            this.algorithm = algorithm;
+        }
+
+        public string getAlgorithm()
+        {
+            return this.algorithm;
         }
 
         public string format = null;
